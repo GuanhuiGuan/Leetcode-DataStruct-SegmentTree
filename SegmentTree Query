@@ -1,0 +1,25 @@
+"""
+Definition of SegmentTreeNode:
+class SegmentTreeNode:
+    def __init__(self, start, end, max):
+        self.start, self.end, self.max = start, end, max
+        self.left, self.right = None, None
+"""
+
+
+class Solution:
+    """
+    @param: root: The root of segment tree.
+    @param: start: start value.
+    @param: end: end value.
+    @return: The maximum number in the interval [start, end]
+    """
+    def query(self, root, start, end):
+        
+        if root.start >= start and root.end <= end: #search area larger than the segment; since it's coming top down, it is getting the max of all segments.
+            return root.max;
+            
+        if root.start > end or root.end < start: # Exclusion
+            return -0x7fffffff; # Smallest digit to eliminate influence of max search
+            
+        return max(self.query(root.left, start, end), self.query(root.right, start, end)); #Intersection; Combined with the first step to filter the max of all segments

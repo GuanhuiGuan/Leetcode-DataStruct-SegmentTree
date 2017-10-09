@@ -1,0 +1,51 @@
+"""
+Definition of SegmentTreeNode:
+class SegmentTreeNode:
+    def __init__(self, start, end, max):
+        self.start, self.end, self.max = start, end, max
+        self.left, self.right = None, None
+"""
+
+
+class Solution:
+    """
+    @param: root: The root of segment tree.
+    @param: start: start value.
+    @param: end: end value.
+    @return: The maximum number in the interval [start, end]
+    """
+    #____________Original Version__________WTF IS WRONG HERE???
+        if root.start == start and root.end == end: # Same interval
+            return root.max;
+        
+        # Divide into two parts by the middle of the interval(not the query)    
+        mid = (root.start + root.end) / 2;
+        leftmax = -float('inf');
+        rightmax = -float('inf');
+        
+        if start <= mid:        # left section
+            if end > mid:
+                leftmax = self.query(root.left, start, mid);
+            else:
+                leftmax = self.query(root.left, start, end);
+                
+        if end >= mid:          # right section
+            if start < mid:
+                rightmax = self.query(root.right, mid + 1, end);
+            else:
+                rightmax = self.query(root.right, start, end);
+                
+        return max(leftmax, rightmax);
+    
+    #___________Succinct Version__________
+    def query(self, root, start, end):
+        # write your code here
+        if start > root.end or end < root.start:
+            return None;
+        
+        elif start <= root.start and end >= root.end:   # Starting from the largest interval, we could use such method
+            return root.max;
+            
+
+        return max(self.query(root.left, start, end), self.query(root.right, start, end));
+            

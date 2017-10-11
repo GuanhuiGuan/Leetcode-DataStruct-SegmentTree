@@ -1,0 +1,60 @@
+"""
+Definition of Interval.
+class Interval(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+"""
+class STNode:       # Segment Tree Node
+    def __init__(self, start, end, min):
+        self.start, self.end, self.min = start, end, min;
+        self.left, self.right = None, None;
+
+class Solution:
+    """
+    @param: A: An integer array
+    @param: queries: An query list
+    @return: The result list
+    """
+        
+    def intervalMinNumber(self, A, queries):
+        # write your code here
+        root = self.build(0, len(A) - 1, A);
+        re = [];
+        for query in queries:
+            start, end = query.start, query.end;
+            re.append(self.Search(root, start, end));
+        return re;
+    
+    def build(self, start, end, A):
+        node = STNode(start, end, A[start]);
+        if start > end:
+            return None;
+        if start == end:
+            return node;
+        else:       # Build
+            mid = (start + end) / 2;
+            node.left = self.build(start, mid, A);
+            node.right = self.build(mid + 1, end, A);
+        
+        node.min = min(node.left.min, node.right.min);  # Update min
+        return node;
+        
+    def Search(self, node, start, end): # Here start and end are attributes of a query
+        if start == node.start and end == node.end:   # Same
+            return node.min;
+        mid = (node.start + node.end) / 2;      # Divide into 2 sectors to analyze
+        leftmin, rightmin = float('inf'), float('inf');
+        if start <= mid and node.left:          # should be \leq instead of <
+            if end < mid:
+                leftmin = self.Search(node.left, start, end);
+            else:
+                leftmin = self.Search(node.left, start, mid);
+        if end >= mid and node.right:
+            if start > mid:
+                rightmin = self.Search(node.right, start, end);
+            else:
+                rightmin = self.Search(node.right, mid + 1, end);
+                
+        # Find minimum of the query, not min of the segment tree node
+        return min(leftmin, rightmin);

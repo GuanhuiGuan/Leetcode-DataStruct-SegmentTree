@@ -1,0 +1,36 @@
+"""
+Definition of SegmentTreeNode:
+class SegmentTreeNode:
+    def __init__(self, start, end, max):
+        self.start, self.end, self.max = start, end, max
+        self.left, self.right = None, None
+"""
+
+
+class Solution:
+    """
+    @param: A: a list of integer
+    @return: The root of Segment Tree
+    """
+    def build(self, A):
+        # write your code here
+        start = 0;
+        end = len(A) - 1;
+        root = self.ST(start, end, A);
+        return root;
+        
+    def ST(self, start, end, A):    # Build and update segment tree
+        if start > end:
+            return None;
+        node = SegmentTreeNode(start, end, A[start]);   # Initialize max as first value; will be updated
+        
+        if start != end:
+            mid = (start + end) / 2;
+            node.left = self.ST(start, mid, A);
+            node.right = self.ST(mid + 1, end, A);
+        
+        if node.start != node.end and node.left != None and node.right != None:  # Then it must have 2 children
+            node.max = max(node.left.max, node.right.max);    
+        
+        return node;
+        

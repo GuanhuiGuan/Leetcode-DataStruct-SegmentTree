@@ -1,0 +1,35 @@
+"""
+Definition of SegmentTreeNode:
+class SegmentTreeNode:
+    def __init__(self, start, end, max):
+        self.start, self.end, self.max = start, end, max
+        self.left, self.right = None, None
+"""
+
+
+class Solution:
+    """
+    @param: root: The root of segment tree.
+    @param: index: index.
+    @param: value: value
+    @return: 
+    """
+    def modify(self, root, index, value):
+        return self.Search(root, index, value);
+          
+    def Search(self, node, index, value):
+        if index < node.start or index > node.end:
+            return None;
+        
+        if node.start == node.end:# Then it must be that element we need to change
+            node.max = value;
+        else: 
+            mid = (node.start + node.end) / 2;
+            if index <= mid:
+                self.Search(node.left, index, value);
+            else:
+                self.Search(node.right, index, value);
+
+            node.max = max(node.left.max, node.right.max);  # Update  
+        
+        return node;    

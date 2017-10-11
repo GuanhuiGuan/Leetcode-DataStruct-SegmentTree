@@ -14,7 +14,11 @@ class Solution:
     @param: end: end value.
     @return: The maximum number in the interval [start, end]
     """
-    #____________Original Version__________WTF IS WRONG HERE???
+    #____________Original Version__________
+    def query(self, root, start, end):
+        if start > root.end or end < root.start: # No overlapping (Not necessary here)
+            return -float('inf');
+        
         if root.start == start and root.end == end: # Same interval
             return root.max;
         
@@ -23,13 +27,13 @@ class Solution:
         leftmax = -float('inf');
         rightmax = -float('inf');
         
-        if start <= mid:        # left section
+        if start <= mid and root.left != None:        # left section (REMEMBER TO FIND OUT WHETHER IT HAS CHILD!)
             if end > mid:
                 leftmax = self.query(root.left, start, mid);
             else:
                 leftmax = self.query(root.left, start, end);
                 
-        if end >= mid:          # right section
+        if end >= mid and root.right != None:          # right section
             if start < mid:
                 rightmax = self.query(root.right, mid + 1, end);
             else:

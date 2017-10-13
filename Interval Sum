@@ -1,0 +1,51 @@
+"""
+Definition of Interval.
+class Interval(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+"""
+class STNode:
+    def __init__(self, start, end, sum):
+        self.start, self.end, self.sum = start, end, sum;
+        self.left, self.right = None, None;
+
+class Solution:
+    """
+    @param: A: An integer list
+    @param: queries: An query list
+    @return: The result list
+    """
+    def intervalSum(self, A, queries):
+        # write your code here
+        start, end = 0, len(A) - 1;
+        root = self.ST(start, end, A);
+        re = [];
+        for query in queries:
+            start, end = query.start, query.end;
+            re.append(self.Search(root, start, end));
+        return re;
+        
+    def ST(self, start, end, A):
+        node = STNode(start, end, A[start]);    # Build Segment Tree
+        if start == end:
+            return node;
+        if start > end:
+            return None;
+        mid = (start + end) / 2;
+        node.left = self.ST(start, mid, A);
+        node.right = self.ST(mid + 1, end, A);
+        
+        node.sum = node.left.sum + node.right.sum;
+        
+        return node;
+
+    def Search(self, node, start, end):             # Search
+        if start > node.end or end < node.start:
+            return 0;
+        if start <= node.start and end >= node.end:
+            return node.sum;
+        
+        return self.Search(node.left, start, end) + self.Search(node.right, start, end);
+        
+        

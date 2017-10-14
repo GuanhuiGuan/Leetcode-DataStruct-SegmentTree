@@ -1,0 +1,74 @@
+class STNode(object):
+    def __init__(self, start, end, sum):
+        self.start, self.end, self.sum = start, end, sum;
+        self.left, self.right = None, None;
+    
+    @classmethod    
+    def build(self, start, end, A):
+        if len(A) < 1:
+            return None;
+        node = STNode(start, end, A[start]);
+        if start > end:
+            return None;
+        if start == end:
+            return node;
+        else:
+            mid = (start + end) / 2;
+            node.left = self.build(start, mid, A);
+            node.right = self.build(mid + 1, end, A);
+            if node.left and node.right:
+                node.sum = node.left.sum + node.right.sum;
+                
+            return node;
+                
+    @classmethod         
+    def iterQuery(self, node, start, end):
+        if node == None:
+            return 0;
+        if start > node.end or end < node.start:
+            return 0;
+        if start <= node.start and end >= node.end:
+            return node.sum;
+        return self.iterQuery(node.left, start, end) + self.iterQuery(node.right, start, end);
+        
+    @classmethod     
+    def iterMod(self, node, index, value):
+        if node == None:
+            return None;
+        if node.start == node.end:
+            node.sum = value;
+        else:
+            mid = (node.start + node.end) / 2;
+            if index <= mid:
+                self.iterMod(node.left, index, value);
+            else:
+                self.iterMod(node.right, index, value);
+            node.sum = node.left.sum + node.right.sum;
+
+class Solution:
+    """
+    @param: A: An integer array
+    """
+    def __init__(self, A):
+        # do intialization if necessary
+
+        self.root = STNode.build(0, len(A) - 1, A);
+        
+            
+    """
+    @param: start: An integer
+    @param: end: An integer
+    @return: The sum from start to end
+    """
+    def query(self, start, end):
+        # write your code here
+        return STNode.iterQuery(self.root, start, end);
+    """
+    @param: index: An integer
+    @param: value: An integer
+    @return: nothing
+    """
+    def modify(self, index, value):
+        # write your code here
+        STNode.iterMod(self.root, index, value);
+    
